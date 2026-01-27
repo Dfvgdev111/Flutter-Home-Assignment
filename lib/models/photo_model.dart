@@ -1,6 +1,6 @@
 class Photo {
   final String path;
-  final int rating;
-
-  Photo({required this.path, required this.rating});
+  int rating;
+  final String author;
+  Photo({required this.path, required this.author, this.rating = 0});
 }
