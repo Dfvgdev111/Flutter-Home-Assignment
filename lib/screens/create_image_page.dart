@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import '../models/photo_model.dart';
+import '../services/photo_service.dart';
 
 class CreateImagePage extends StatefulWidget {
   const CreateImagePage({super.key});
@@ -12,26 +14,41 @@ class _CreateImagePageState extends State<CreateImagePage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _authorController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
+  final PhotoService _photoService = PhotoService();
 
-  void _submitForm() {
-    if (_formKey.currentState!.validate()) {
-      Photo newPhoto = Photo(
-        path: '',
-        author: _authorController.text,
-        description: _descriptionController.text,
-        rating: 0,
-      );
+  File? _imageFile;
 
-      //TODO Have to implement a service to for saving
-      print(
-        'Photo ready to save: Author=${newPhoto.author}, Description=${newPhoto.description}',
+  //TODO save Images and Save Details
+
+  void _pickImage() async {
+    File? photo = await _photoService.takePhoto();
+    if (photo != null) {
+      setState(() {
+        _imageFile = photo;
+      });
+    }
+  }
+
+  void _submitForm() async {
+    if (_formKey.currentState!.validate() && _imageFile != null) {
+      await _photoService.savePhoto(
+        _imageFile!,
+        _authorController.text,
+        _descriptionController.text,
       );
 
       _authorController.clear();
       _descriptionController.clear();
+      setState(() {
+        _imageFile = null;
+      });
 
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Photo saved!')));
+    } else if (_imageFile == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Photo data saved (image pending)')),
+        const SnackBar(content: Text('Please take a photo first')),
       );
     }
   }
@@ -43,7 +60,6 @@ class _CreateImagePageState extends State<CreateImagePage> {
       child: Form(
         key: _formKey,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             TextFormField(
               controller: _authorController,
@@ -56,7 +72,6 @@ class _CreateImagePageState extends State<CreateImagePage> {
                   : null,
             ),
             const SizedBox(height: 16),
-
             TextFormField(
               controller: _descriptionController,
               decoration: const InputDecoration(
@@ -68,9 +83,21 @@ class _CreateImagePageState extends State<CreateImagePage> {
                   ? 'Please enter a description'
                   : null,
             ),
-
+            const SizedBox(height: 16),
+            ElevatedButton.icon(
+              icon: const Icon(Icons.camera_alt),
+              label: const Text('Take Photo'),
+              onPressed: _pickImage,
+            ),
+            const SizedBox(height: 16),
+            if (_imageFile != null)
+              Image.file(
+                _imageFile!,
+                width: 200,
+                height: 200,
+                fit: BoxFit.cover,
+              ),
             const SizedBox(height: 24),
-
             ElevatedButton(
               onPressed: _submitForm,
               child: const Text('Save Photo Data'),

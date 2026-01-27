@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:homeassignment/services/create_image_page.dart';
-import 'package:homeassignment/services/view_image_page.dart';
+import 'package:homeassignment/screens/create_image_page.dart';
+import 'package:homeassignment/screens/view_image_page.dart';
 import 'models/photo_model.dart';
 import 'widgets/photo_card.dart';
 import 'widgets/rating_widget.dart';
@@ -33,7 +33,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _currentIndex = 0;
 
-  // Pages for the navbar
   final List<Widget> _pages = [const ViewImagesPage(), const CreateImagePage()];
 
   @override
