@@ -1,12 +1,11 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:homeassignment/injection_container.dart';
 import 'package:homeassignment/screens/create_image_page.dart';
 import 'package:homeassignment/screens/view_image_page.dart';
-import 'models/photo_model.dart';
-import 'widgets/photo_card.dart';
-import 'widgets/rating_widget.dart';
 
-void main() {
+void main() async {
+  await setup(); //Registered all depedencies
   runApp(const MyApp());
 }
 

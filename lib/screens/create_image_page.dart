@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:homeassignment/services/saving_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/photo_model.dart';
 import '../services/photo_service.dart';
 
@@ -15,6 +17,7 @@ class _CreateImagePageState extends State<CreateImagePage> {
   final TextEditingController _authorController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final PhotoService _photoService = PhotoService();
+  SavingService? _savingService;
 
   File? _imageFile;
 
@@ -31,11 +34,7 @@ class _CreateImagePageState extends State<CreateImagePage> {
 
   void _submitForm() async {
     if (_formKey.currentState!.validate() && _imageFile != null) {
-      await _photoService.savePhoto(
-        _imageFile!,
-        _authorController.text,
-        _descriptionController.text,
-      );
+      await _photoService.savePhoto(_imageFile!);
 
       _authorController.clear();
       _descriptionController.clear();
