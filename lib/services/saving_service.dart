@@ -8,7 +8,7 @@ class SavingService {
   late final SharedPreferences _prefs;
 
   Future<void> savePhoto(Photo photo) async {
-    String photoString = '${photo.path}|${photo.author}|${photo.description}';
+    String photoString = '${photo.path}|${photo.title}|${photo.description}';
     List<String>? photoList = _prefs.getStringList("photos") ?? [];
 
     photoList.add(photoString);
@@ -18,16 +18,18 @@ class SavingService {
 
   Photo makePhotoObject(String photoContents) {
     final parts = photoContents.split('|');
-    return Photo(path: parts[0], author: parts[1], description: parts[2]);
+    return Photo(path: parts[0], title: parts[1], description: parts[2]);
   }
 
-  List<Photo> loadPhotos(List<String> photos) {
-    List<Photo> listOfPhotos = [];
+  List<Photo> loadPhotos() {
+    List<String>? photos = _prefs.getStringList("photos") ?? [];
+
+    List<Photo> listOfTypedPhotos = [];
 
     for (String photo in photos) {
-      listOfPhotos.add(makePhotoObject(photo));
+      listOfTypedPhotos.add(makePhotoObject(photo));
     }
 
-    return listOfPhotos;
+    return listOfTypedPhotos;
   }
 }

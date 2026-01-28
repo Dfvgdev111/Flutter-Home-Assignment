@@ -1,12 +1,12 @@
 class Photo {
   final String path;
   int rating;
-  final String author;
+  final String title;
   final String description;
 
   Photo({
     required this.path,
-    required this.author,
+    required this.title,
     this.rating = 0,
     required this.description,
   });

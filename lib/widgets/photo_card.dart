@@ -44,12 +44,22 @@ class PhotoCard extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12),
             child: Text(
-              'Author: ${photo.author}',
+              'Title: ${photo.title}',
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
           ),
 
           const SizedBox(height: 4),
+
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: Text(
+              'Description: ${photo.description}',
+              style: const TextStyle(color: Colors.grey),
+            ),
+          ),
+
+          const SizedBox(height: 8),
 
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),

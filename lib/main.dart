@@ -5,7 +5,8 @@ import 'package:homeassignment/screens/create_image_page.dart';
 import 'package:homeassignment/screens/view_image_page.dart';
 
 void main() async {
-  await setup(); //Registered all depedencies
+  WidgetsFlutterBinding.ensureInitialized();
+  await setup();
   runApp(const MyApp());
 }
 
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Photo Rating Demo',
+      title: 'Rate My Own Pics',
       theme: ThemeData(primarySwatch: Colors.deepPurple),
       home: const MyHomePage(),
     );

@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:homeassignment/services/saving_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/photo_model.dart';
@@ -14,10 +15,10 @@ class CreateImagePage extends StatefulWidget {
 
 class _CreateImagePageState extends State<CreateImagePage> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _authorController = TextEditingController();
+  final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
-  final PhotoService _photoService = PhotoService();
-  SavingService? _savingService;
+  final _photoService = GetIt.instance<PhotoService>();
+  final _savingService = GetIt.instance<SavingService>();
 
   File? _imageFile;
 
@@ -36,11 +37,19 @@ class _CreateImagePageState extends State<CreateImagePage> {
     if (_formKey.currentState!.validate() && _imageFile != null) {
       await _photoService.savePhoto(_imageFile!);
 
-      _authorController.clear();
+      Photo photo = Photo(
+        path: _imageFile!.path,
+        title: _titleController.text,
+        description: _descriptionController.text,
+      );
+
+      _titleController.clear();
       _descriptionController.clear();
       setState(() {
         _imageFile = null;
       });
+
+      await _savingService.savePhoto(photo);
 
       ScaffoldMessenger.of(
         context,
@@ -61,13 +70,13 @@ class _CreateImagePageState extends State<CreateImagePage> {
         child: Column(
           children: [
             TextFormField(
-              controller: _authorController,
+              controller: _titleController,
               decoration: const InputDecoration(
-                labelText: 'Author',
+                labelText: 'Title',
                 border: OutlineInputBorder(),
               ),
               validator: (value) => value == null || value.isEmpty
-                  ? 'Please enter an author'
+                  ? 'Please enter an Title'
                   : null,
             ),
             const SizedBox(height: 16),
