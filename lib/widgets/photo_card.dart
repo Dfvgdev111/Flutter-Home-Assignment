@@ -6,11 +6,12 @@ import 'rating_widget.dart';
 class PhotoCard extends StatelessWidget {
   final Photo photo;
   final Function(int) onRatingChanged;
-
+  final VoidCallback onDelete;
   const PhotoCard({
     Key? key,
     required this.photo,
     required this.onRatingChanged,
+    required this.onDelete,
   }) : super(key: key);
 
   @override
@@ -55,17 +56,28 @@ class PhotoCard extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 12),
             child: Text(
               'Description: ${photo.description}',
-              style: const TextStyle(color: Colors.grey),
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
           ),
 
-          const SizedBox(height: 8),
+          const SizedBox(height: 15),
 
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             child: RatingWidget(
               rating: photo.rating,
               onRatingChanged: onRatingChanged,
+            ),
+          ),
+
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: IconButton(
+                icon: const Icon(Icons.delete, color: Colors.red),
+                onPressed: onDelete,
+              ),
             ),
           ),
         ],

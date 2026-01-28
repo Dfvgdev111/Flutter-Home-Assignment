@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:homeassignment/models/photo_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -8,7 +10,7 @@ class SavingService {
   late final SharedPreferences _prefs;
 
   Future<void> savePhoto(Photo photo) async {
-    String photoString = '${photo.path}|${photo.title}|${photo.description}';
+    String photoString = makePhotoString(photo);
     List<String>? photoList = _prefs.getStringList("photos") ?? [];
 
     photoList.add(photoString);
@@ -16,9 +18,24 @@ class SavingService {
     _prefs.setStringList('photos', photoList);
   }
 
+  Future<void> savePhotos(List<Photo> photos) async {
+    final photoStrings = photos.map((p) => makePhotoString(p)).toList();
+    print(photoStrings);
+    await _prefs.setStringList('photos', photoStrings);
+  }
+
   Photo makePhotoObject(String photoContents) {
     final parts = photoContents.split('|');
-    return Photo(path: parts[0], title: parts[1], description: parts[2]);
+    return Photo(
+      path: parts[0],
+      title: parts[1],
+      description: parts[2],
+      rating: int.parse(parts[3]),
+    );
+  }
+
+  String makePhotoString(Photo photo) {
+    return '${photo.path}|${photo.title}|${photo.description}|${photo.rating}';
   }
 
   List<Photo> loadPhotos() {
@@ -31,5 +48,32 @@ class SavingService {
     }
 
     return listOfTypedPhotos;
+  }
+
+  Future<void> updatePhotoRating(int index, int rating) async {
+    var photos = loadPhotos();
+    if (index < 0 || index >= photos.length) return;
+
+    photos[index].rating = rating;
+
+    await savePhotos(photos);
+    print("Saving is done");
+  }
+
+  Future<void> deletePhoto(int index) async {
+    List<Photo> photos = loadPhotos();
+
+    final photo = photos[index];
+
+    final file = File(photo.path);
+
+    if (await file.exists()) {
+      await file.delete();
+    }
+    photos.removeAt(index);
+
+    await savePhotos(photos);
+
+    print('Deleting at index $index');
   }
 }
