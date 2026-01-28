@@ -1,10 +1,13 @@
 import 'dart:io';
 
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:homeassignment/models/photo_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SavingService {
   //Depedency Injection
+  final FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+
   SavingService({required SharedPreferences prefs}) : _prefs = prefs;
 
   late final SharedPreferences _prefs;
@@ -55,6 +58,16 @@ class SavingService {
     if (index < 0 || index >= photos.length) return;
 
     photos[index].rating = rating;
+
+    analytics.logEvent(
+      name: "Updated Picture Ranking",
+      parameters: {
+        "Photo": {
+          "Picture Title": photos[index].title,
+          "Rating": photos[index].rating,
+        },
+      },
+    );
 
     await savePhotos(photos);
     print("Saving is done");

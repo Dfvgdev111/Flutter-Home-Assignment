@@ -29,7 +29,7 @@ class _ViewImagesPageState extends State<ViewImagesPage> {
     }
 
     return Scaffold(
-      appBar: AppBar(title: Center(child: Text('Saved Photos}'))),
+      appBar: AppBar(title: Center(child: Text('Saved Photos'))),
       body: ListView.builder(
         padding: const EdgeInsets.all(8),
         itemCount: photos.length,

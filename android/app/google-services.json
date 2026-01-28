@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1043838510885",
+    "project_id": "crossplatformassignment-bae56",
+    "storage_bucket": "crossplatformassignment-bae56.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1043838510885:android:c0fa050d9d7e00aa4f1ccc",
+        "android_client_info": {
+          "package_name": "com.example.homeassignment"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCEoXIDQvwRi5JMupa3bMgT_OcdYsvMcBg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

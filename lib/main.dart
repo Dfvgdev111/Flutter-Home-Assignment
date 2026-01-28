@@ -1,4 +1,5 @@
-import 'dart:io';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:homeassignment/injection_container.dart';
 import 'package:homeassignment/screens/create_image_page.dart';
@@ -6,7 +7,9 @@ import 'package:homeassignment/screens/view_image_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   await setup();
+
   runApp(const MyApp());
 }
 
@@ -18,13 +21,15 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Rate My Own Pics',
       theme: ThemeData(primarySwatch: Colors.deepPurple),
-      home: const MyHomePage(),
+      home: /*const*/ MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
+  final FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+  /*const*/
+  MyHomePage({super.key});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();

@@ -1,10 +1,12 @@
 import 'dart:io';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:homeassignment/services/memorynotifcations.dart';
 import 'package:homeassignment/services/saving_service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../models/photo_model.dart';
 import '../services/photo_service.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class CreateImagePage extends StatefulWidget {
   const CreateImagePage({super.key});
@@ -19,10 +21,18 @@ class _CreateImagePageState extends State<CreateImagePage> {
   final TextEditingController _descriptionController = TextEditingController();
   final _photoService = GetIt.instance<PhotoService>();
   final _savingService = GetIt.instance<SavingService>();
+  final FirebaseAnalytics analytics = FirebaseAnalytics.instance;
 
   File? _imageFile;
 
   //TODO save Images and Save Details
+
+  @override
+  void initState() {
+    super.initState();
+
+    MemoryNotifcations.initialize();
+  }
 
   void _pickImage() async {
     File? photo = await _photoService.takePhoto();
@@ -49,7 +59,25 @@ class _CreateImagePageState extends State<CreateImagePage> {
         _imageFile = null;
       });
 
+      if (await Permission.notification.request().isGranted) {
+        await MemoryNotifcations.notficationAlert(
+          "Submit Added",
+          "Title \"${photo.title}\"",
+        );
+      }
+
       await _savingService.savePhoto(photo);
+
+      analytics.logEvent(
+        name: "ImageSaved",
+        parameters: {
+          "Saved Photo": {
+            "Title": photo.title,
+            "Discription": photo.description,
+            "ImagePath": photo.path,
+          },
+        },
+      );
 
       ScaffoldMessenger.of(
         context,
